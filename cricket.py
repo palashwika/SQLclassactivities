@@ -56,27 +56,67 @@ print(matches)
 print('Rows and columns: ', matches.shape)
 
 #--- PART 3: SELECT Rows and Columns ---
-#SELECT * fetches every column from a table.
-#Name specific columns after SELECT to see only those.
-#pd.read_sql() runs your SQL and retunrs a DataFram.
+# SELECT * fetches every column from a table.
+# Name specific columns after SELECT to see only those.
+# pd.read_sql() runs your SQL and retunrs a DataFram.
 
-# #Fetch ALL columns from the Team table
-# teams = pd.read_sql("""SELECT * FROM Team;""", conn)
+#Fetch ALL columns from the Team table
+teams = pd.read_sql("""SELECT * FROM Team;""", conn)
 
-# print(teams)
+print(teams)
 
-# #Fetch ONLY Team_Id and Team_Name columns
-# team_names = pd.read_sql("""SELECT Team_Id, Team_Name FROM Team; """, conn)
-# print(team_names)
+#Fetch ONLY Team_Id and Team_Name columns
+team_names = pd.read_sql("""SELECT Team_Id, Team_Name FROM Team; """, conn)
+print(team_names)
 
-# #Fetch Match_Id and Player_Id from Player_match
-# player_matches = pd.read_sql("""SELECT Match_Id, Player_Id FROM Player_Match; """, conn)
-# print(player_matches)
+#Fetch Match_Id and Player_Id from Player_match
+player_matches = pd.read_sql("""SELECT Match_Id, Player_Id FROM Player_Match; """, conn)
+print(player_matches)
 
 # ---PART 4: Filter Rows with WHERE ---
-#WHERE keeps only the rows that match a condition -
-#like a sieve that lets some rows through and block tohers
-#AND combines two conditions (both must be true).
-#IN lets you list several allowed values in one go.
+# WHERE keeps only the rows that match a condition -
+# like a sieve that lets some rows through and block tohers
+# AND combines two conditions (both must be true).
+# IN lets you list several allowed values in one go.
 
-#All matches won by Rajasthan Royals (Team_Id = 7)
+# All matches won by Rajasthan Royals (Team_Id = 7)
+rr_wins = pd.read_sql("""SELECT * FROM Match WHERE Match_Winner == 7; """, conn)
+print(rr_wins)
+
+
+mi_recent = pd.read_sql("""SELECT * FROM Match WHERE Match_Winner == 5 AND Season_Id IN (8,9);""",conn)
+print(mi_recent)
+
+
+# ---- PART 5: Search for a Pattern with LIKE ----
+#LIKE searches for a pattern inside a text column.
+# % means zero or more of any character.
+# 'De%' matches any name that starts with the letters De.
+#LIKE always goes inside a WHERE clause.
+
+#Find all teams whose name begins with 'De'
+de_teams = pd.read_sql("""SELECT * FROM Team WHERE Team_Name LIKE 'De%';""", conn)
+
+
+#Find all teams whose name ends with 'Kings'
+kings_teams = pd.read_sql("""SELECT * FROM Team WHERE Team_Name LIKE '%Kings';""", conn)
+print(kings_teams)
+
+# ----PART 6: Find the Smallest and Largest Values ----
+#MIN() returns the smallest value in a column.
+#MAX() returns the largest value in a column.
+#Write both inside SELECT to compare them in one result.
+
+#Find the narrowest and biggest win margins ever recorded
+win_margins = pd.read_sql("""SELECT MIN(Win_Margin), MAX(Win_Margin) FROM Match;""", conn)
+print(win_margins)
+
+#Find the earliest and latest Season_Id in the database
+seasons = pd.read_sql("""SELECT MIN(Season_Id), MAX(Season_Id) FROM Match;""", conn)
+
+print(seasons)
+
+conn.close()
+
+
+
