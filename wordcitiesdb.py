@@ -29,8 +29,10 @@ conn.execute("INSERT INTO City VALUES (2, 'Nairobi', 'Kenya', 4397000, 'Yes');")
 conn.execute("INSERT INTO City VALUES (3, 'Mumbai', 'India', 20667656, 'No');")
 conn.execute("INSERT INTO City VALUES (4, 'Sao Paulo', 'Brazil', 12325232, 'No');")
 conn.execute("INSERT INTO City VALUES (5, 'London', 'UK', 9541000, 'Yes');")
-conn.execute("INSERT INTO City VALUES (City_Id, City_Name, Country) VALUES (6, 'Sydney', 'Australia');")
+conn.execute("INSERT INTO City (City_Id, City_Name, Country) VALUES (6, 'Sydney', 'Australia');")
 conn.commit()
+
+
 
 print("Rows inserted successfully!")
 
@@ -95,7 +97,7 @@ print("Is_Capital was not given - DEFAULT 'No' was used automatically.")
 # USE IS NOT NULL to find rows where data was prvodied
 
 print("\n--- NULL in the Population column ---")
-all_cities = pd.read_dql("""SELECT City_Name, Country, Population FROM City;""", conn)
+all_cities = pd.read_sql("""SELECT City_Name, Country, Population FROM City;""", conn)
 print(all_cities)
 
 missing = pd.read_sql("""SELECT City_Name FROM City WHERE Population is NULL;""", conn)
